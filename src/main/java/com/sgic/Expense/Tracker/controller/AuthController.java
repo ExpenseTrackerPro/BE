@@ -5,9 +5,12 @@ import com.sgic.Expense.Tracker.dto.LoginRequestDto;
 import com.sgic.Expense.Tracker.dto.RegisterRequestDto;
 import com.sgic.Expense.Tracker.dto.UserDto;
 import com.sgic.Expense.Tracker.entity.User;
+import com.sgic.Expense.Tracker.enums.RestApiResponseStatusCodes;
 import com.sgic.Expense.Tracker.repository.UserRepository;
 import com.sgic.Expense.Tracker.security.JwtService;
 import com.sgic.Expense.Tracker.service.AuthService;
+import com.sgic.Expense.Tracker.utils.ResponseWrapper;
+import com.sgic.Expense.Tracker.utils.ValidationMessages;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,22 +33,29 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private UserDto response;
 
     /**
      * POST /api/auth/register
-     *
+     * <p>
      * Registers a new user account into the database so they can
      * authenticate later.
      */
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterRequestDto request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto request) {
         UserDto response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(new
+                ResponseWrapper<>(
+                        RestApiResponseStatusCodes.ACCEPTED.getCode(),
+                        ValidationMessages.SUCCESS,
+                        response
+        ));
     }
 
     /**
      * POST /api/auth/login
-     *
+     * <p>
      * Authenticates a user using credentials supplied in the JSON body.
      * Generates and returns a JWT token for stateless communication.
      */
