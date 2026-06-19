@@ -1,15 +1,16 @@
 package com.sgic.Expense.Tracker.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private Long id;
-    private String name;
+@Builder
+public class AuthResponseDto {
+    private String token;
     private String email;
-    // Note: password is intentionally excluded — never expose it in responses
+    private String name;
 }
